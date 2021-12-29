@@ -16,7 +16,7 @@ spec:
     node(POD_LABEL) {
         stage('Run ansible') {
             container(name: 'ansible') {
-                withVault([path: '/secret/automation/ssh-key', secretValues: [[envVar: 'ANSIBLE_SSH_KEY', vaultKey: 'ssh-key']]]) {
+                withVault([vaultSecrets: [[path: '/secret/automation/ssh-key', secretValues: [[envVar: 'ANSIBLE_SSH_KEY', vaultKey: 'ssh-key']]]]]) {
                     sh 'ssh-add - <<< "$ANSIBLE_SSH_KEY"'
                 }
                 sh 'ansible-playbook -i kubevirt.yaml playbooks/default.yaml'
