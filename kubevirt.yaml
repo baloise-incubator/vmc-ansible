@@ -1,6 +1,4 @@
 plugin: kubevirt
 connections:
  - api_version: v1
-   namespaces:
-#   - vm-cluster-example
    interface_name: default
