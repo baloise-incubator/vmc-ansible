@@ -1,0 +1,10 @@
+---
+- name: Update centos8 servers
+  hosts: label_os_linux_centos8
+  remote_user: config
+  tasks:
+  - name: Upgrade all packages
+    become: yes
+    dnf:
+      name: "*"
+      state: latest
