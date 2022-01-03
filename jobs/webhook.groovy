@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     parsedWebhookPayload = readJSON text: "${webhookPayload}"
-                    def eventType = "$X-KubeVirt-Event"
+                    def eventType = "$X_KubeVirt_Event"
                     echo eventType
                     echo parsedWebhookPayload
                 }
