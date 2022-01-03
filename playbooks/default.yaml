@@ -1,6 +1,6 @@
 ---
-- name: Update centos8 servers
-  hosts: label_os_linux_centos8
+- name: Update RHEL-based servers
+  hosts: label_os_rhel
   remote_user: config
   tasks:
   - name: Upgrade all packages
