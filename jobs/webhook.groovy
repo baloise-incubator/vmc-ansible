@@ -4,9 +4,7 @@
 parsedWebhookPayload = ''
 
 pipeline {
-    agent {
-        any
-    }
+    agent any
 
     triggers {
         GenericTrigger(
