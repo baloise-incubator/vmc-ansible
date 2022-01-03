@@ -24,7 +24,7 @@ pipeline {
                     parsedWebhookPayload = readJSON text: "${webhookPayload}"
                     def eventType = "$X_KubeVirt_Event"
                     echo eventType
-                    echo parsedWebhookPayload
+                    echo parsedWebhookPayload.dump()
                 }
             }
         }
