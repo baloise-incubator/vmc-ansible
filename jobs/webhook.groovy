@@ -21,7 +21,6 @@ spec:
     - cat
     tty: true
 """
-            )
         }
     }
 
