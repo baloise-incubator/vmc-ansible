@@ -18,6 +18,7 @@
       name: "httpd"
       state: latest
   - name: Enable and start httpd service
+    become: yes
     systemd:
       name: httpd
       enabled: yes
