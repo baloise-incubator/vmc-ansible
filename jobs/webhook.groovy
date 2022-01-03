@@ -24,7 +24,7 @@ pipeline {
                     parsedWebhookPayload = readJSON text: "${webhookPayload}"
                     def eventType = "$X_KubeVirt_Event"
                     echo "Event Type: ${eventType}"
-                    def hostGroupCreateRegex = /[^a-zA-Z0-9 -]/
+                    def hostGroupCreateRegex = "/[^a-zA-Z0-9]/"
                     def namespace = parsedWebhookPayload['namespace'].replaceAll(hostGroupCreateRegex, "_")
                     def cluster = parsedWebhookPayload['cluster'].replaceAll(hostGroupCreateRegex, "_")
                     echo "Namespace: ${namespace}; Cluster: ${cluster}"
