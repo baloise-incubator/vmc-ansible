@@ -23,8 +23,10 @@ pipeline {
                 script {
                     parsedWebhookPayload = readJSON text: "${webhookPayload}"
                     def eventType = "$X_KubeVirt_Event"
-                    echo eventType
-                    parsedWebhookPayload.properties.each { println "$it.key -> $it.value" }
+                    echo "Event Type: ${eventType}"
+                    def namespace = parsedWebhookPayload['namespace']
+                    def vm = parsedWebhookPayload['vm']
+                    echo "Namespace: ${namespace}; VM: ${vm}"
                 }
             }
         }
