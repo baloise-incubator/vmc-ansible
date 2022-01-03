@@ -6,8 +6,8 @@ parsedWebhookPayload = ''
 pipeline {
     agent {
         kubernetes {
-            idleMinutes: 10
-            yaml: """
+            idleMinutes 10
+            yaml """
 kind: Pod
 spec:
   containers:
