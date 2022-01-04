@@ -3,7 +3,15 @@
 - name: Install Apache
   hosts: label_apache_latest
   remote_user: config
+  gather_facts: no
   tasks:
+  - wait_for:
+      host: "{{ ansible_host }}"
+      port: 22
+      timeout: 300
+    delegate_to: localhost
+  - name: Gather facts
+    setup:
   - name: Install httpd
     become: yes
     dnf:
