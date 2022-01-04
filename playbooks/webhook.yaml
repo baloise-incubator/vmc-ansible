@@ -1,0 +1,17 @@
+---
+- name: Install Apache
+  hosts: label_apache_latest
+  remote_user: config
+  tasks:
+  - name: Install httpd
+    become: yes
+    dnf:
+      name: "httpd"
+      state: latest
+  - name: Enable and start httpd service
+    become: yes
+    systemd:
+      name: httpd
+      enabled: yes
+      masked: no
+      state: started
