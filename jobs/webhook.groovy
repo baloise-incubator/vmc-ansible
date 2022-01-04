@@ -52,7 +52,7 @@ spec:
                             sh (script: '#!/bin/sh -e\necho "$ANSIBLE_SSH_KEY" > id_rsa && chmod 600 id_rsa',returnStdout: true)
                             sh 'pwd'
                             sh 'ls -lah'
-                            sh "ansible-playbook -i kubevirt.yaml playbooks/default.yaml --extra-vars \"ansible_ssh_private_key_file=id_rsa\" -l namespace_${cluster} -l label_cluster_${cluster}"
+                            sh "ansible-playbook -i kubevirt.yaml playbooks/default.yaml --extra-vars \"ansible_ssh_private_key_file=id_rsa\" -l namespace_${cluster} -l label_cluster_${cluster} -l label_apache_latest"
                             sh 'rm id_rsa'
                         }
                     }
