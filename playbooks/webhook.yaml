@@ -4,12 +4,15 @@
   hosts: label_apache_latest
   remote_user: config
   tasks:
+  - name: Print all available facts
+    ansible.builtin.debug:
+      var: ansible_facts
   - name: Wait for host
     wait_for:
       host: "{{ inventory_hostname }}"
       port: 22
-      sleep: 20     # check every 24 hours
-      timeout: 600  # exit after 7 days
+      sleep: 20   
+      timeout: 600
     delegate_to: localhost
   - name: Install httpd
     become: yes
