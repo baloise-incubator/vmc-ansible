@@ -1,7 +1,7 @@
 ---
 
 - name: Wait for Hosts
-  hosts: label_apache_latest
+  hosts: all
   remote_user: config
   gather_facts: no
   tasks:

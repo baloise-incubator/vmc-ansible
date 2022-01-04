@@ -5,7 +5,8 @@
   remote_user: config
   gather_facts: no
   tasks:
-  - wait_for:
+  - name: "Wait for port 22 on all VMs"
+    wait_for:
       host: "{{ ansible_host }}"
       port: 22
       timeout: 300
