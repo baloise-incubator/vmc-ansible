@@ -4,10 +4,13 @@
   hosts: label_apache_latest
   remote_user: config
   tasks:
-  - name: Wait 300 seconds, but only start checking after 60 seconds
-    wait_for_connection:
-      delay: 60
-      timeout: 300
+  - name: Wait for host
+    wait_for:
+      host: "{{ inventory_hostname }}"
+      port: 22
+      sleep: 20     # check every 24 hours
+      timeout: 600  # exit after 7 days
+    delegate_to: localhost
   - name: Install httpd
     become: yes
     dnf:
