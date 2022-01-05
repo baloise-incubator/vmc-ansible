@@ -74,7 +74,7 @@
           - { regexp: 'ExecStart\=\/opt\/wildfly\/bin\/launch.sh', replace: 'ExecStart=/opt/jboss/domain/configuration/launch.sh' } 
     - name: Ensure WILDFLY_VARS
       ansible.builtin.lineinfile:
-        path: /opt/jboss/docs/contrib/scripts/systemd/wildfly.conf
+        path: /opt/jboss/domain/configuration/jboss.conf
         regexp: "^{{ item.key }}="
         line: "{{ item.key }}={{ item.value }}"
       with_items:
