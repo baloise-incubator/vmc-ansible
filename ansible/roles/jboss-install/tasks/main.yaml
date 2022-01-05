@@ -1,0 +1,96 @@
+---
+- block:
+    - name: Create jboss user
+      user:
+        name: "{{ jboss_user }}"
+        shell: /bin/false
+        comment: "jboss User"
+    - name: Install JDK 1.8
+      dnf:
+        name: 
+          - java-1.8.0-openjdk
+        state: latest
+    - name: Ansible check file exists example.
+      stat:
+        path: /{{jboss_version}}
+      register: jboss_installation
+    - name: Download jboss 
+      unarchive:
+        src: "{{ https_uri }}"
+        dest: /
+        remote_src: yes
+      when: not jboss_installation.stat.exists
+    - name: create link for /opt/jboss
+      file:
+        src: /{{jboss_version}} 
+        dest: /opt/jboss
+        state: link
+    - name: change owner to jboss user
+      file:
+        path: /{{jboss_version}}
+        owner: jboss
+        group: jboss
+        recurse: yes
+    - name: edit standalone.xml to run on server ip adress
+      replace:
+        path: /opt/jboss/standalone/configuration/standalone.xml
+        backup: yes
+        regexp: '127\.0\.0\.1'
+        replace: "{{ ansible_default_ipv4.address }}"
+    - name: add user and password
+      shell:
+        cmd: JBOSS_HOME='/opt/jboss' /bin/bash -c '/opt/jboss/bin/add-user.sh -u jboss -p Welcome@1122'
+      register: jboss_user
+    - debug:
+        msg: "{{ jboss_user }}"
+    - name: run jboss server as a service
+      copy:
+        src: "{{ item.src }}" 
+        dest: "{{ item.dest }}"
+        owner: jboss
+        mode: "0744"
+        remote_src: yes
+      with_items:
+        - { src: /opt/jboss/docs/contrib/scripts/systemd/wildfly.service , dest: /opt/jboss/domain/configuration/jboss.service } 
+        - { src: /opt/jboss/docs/contrib/scripts/systemd/wildfly.conf , dest: /opt/jboss/domain/configuration/jboss.conf } 
+    - name: run jboss server as a service
+      copy:
+        src: "{{ item.src }}" 
+        dest: "{{ item.dest }}"
+        owner: jboss
+        mode: "0755"
+        remote_src: yes
+      with_items:
+        - { src: /opt/jboss/docs/contrib/scripts/systemd/launch.sh , dest: /opt/jboss/domain/configuration/launch.sh } 
+    - name: change service file
+      replace:
+        path: /opt/jboss/domain/configuration/jboss.service
+        regexp: "{{ item.regexp }}"
+        replace: "{{ item.replace }}"
+        backup: yes
+      with_items:  
+          - { regexp: 'EnvironmentFile\=-\/etc\/wildfly\/wildfly.conf' , replace: 'EnvironmentFile=-/opt/jboss/domain/configuration/jboss.conf' }
+          - { regexp: 'User\=wildfly' , replace: 'User=jboss' }
+          - { regexp: 'ExecStart\=\/opt\/wildfly\/bin\/launch.sh', replace: 'ExecStart=/opt/jboss/domain/configuration/launch.sh' } 
+    - name: Ensure WILDFLY_VARS
+      ansible.builtin.lineinfile:
+        path: /opt/jboss/docs/contrib/scripts/systemd/wildfly.conf
+        regexp: "^{{ item.key }}="
+        line: "{{ item.key }}={{ item.value }}"
+      with_items:
+      - { key: 'WILDFLY_HOME', value: '/opt/jboss/' }
+      - { key: 'WILDFLY_USER', value: 'jboss' }
+    - name: create link for /usr/lib/systemd/system/jboss.service
+      file:
+        src: /opt/jboss/domain/configuration/jboss.service
+        dest: /usr/lib/systemd/system/jboss.service
+        state: link
+    - name: systemd reload
+      become: true
+      systemd:
+        daemon_reload: true
+    - name: start jboss
+      systemd: 
+        name: jboss
+        state: started
+        enabled: true

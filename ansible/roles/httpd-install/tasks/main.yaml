@@ -1,0 +1,18 @@
+- block:
+  - name: Install httpd
+    become: yes
+    dnf:
+      name: "httpd"
+      state: latest
+  - name: Enable and start httpd service
+    become: yes
+    systemd:
+      name: httpd
+      enabled: yes
+      masked: no
+      state: started
+  - name: Check if server is up on 80
+    uri:
+      url: http://{{  ansible_host }}:80/
+    ignore_errors: yes
+    delegate_to: localhost

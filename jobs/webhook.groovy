@@ -45,12 +45,13 @@ spec:
                     def hostGroupCreateRegex = /[^a-zA-Z0-9]/
                     def namespace = parsedWebhookPayload['namespace'].replaceAll(hostGroupCreateRegex, "_")
                     def cluster = parsedWebhookPayload['cluster'].replaceAll(hostGroupCreateRegex, "_")
+                    currentBuild.description = "${cluster}.${namespace}"
                     echo "Namespace: ${namespace}; Cluster: ${cluster}"
                     git branch: 'main', url: 'https://github.com/baloise-incubator/vmc-ansible.git'
                     container(name: 'ansible') {
                         withVault([vaultSecrets: [[path: '/secret/automation/ssh-key', secretValues: [[envVar: 'ANSIBLE_SSH_KEY', vaultKey: 'ssh-key']]]]]) {
                             sh (script: '#!/bin/sh -e\necho "$ANSIBLE_SSH_KEY" > id_rsa && chmod 600 id_rsa',returnStdout: true)
-                            sh "ansible-playbook -i kubevirt.yaml ansible/webhook.yaml --extra-vars \"ansible_ssh_private_key_file=id_rsa\" -l namespace_${cluster} -l label_cluster_${cluster}"
+                            sh "ansible-playbook -i kubevirt.yaml ansible/generic-webhook.yaml --extra-vars \"ansible_ssh_private_key_file=id_rsa\" -l namespace_${cluster} -l label_cluster_${cluster}"
                             sh 'rm id_rsa'
                         }
                     }

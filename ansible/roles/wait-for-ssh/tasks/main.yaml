@@ -1,0 +1,8 @@
+- block:
+  - wait_for:
+      host: "{{ ansible_host }}"
+      port: 22
+      timeout: 300
+    delegate_to: localhost
+  - name: Gather facts
+    setup:

@@ -1,0 +1,5 @@
+https_uri: https://github.com/wildfly/wildfly/releases/download/26.0.0.Final/wildfly-26.0.0.Final.tar.gz
+jboss_user: jboss
+#server_url: enteryouriphere
+jboss_version: wildfly-26.0.0.Final
+# change the https_url for latest version of jboss , currently it is 24.X.X version. add your server url and the jboss_version file 

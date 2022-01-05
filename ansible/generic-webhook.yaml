@@ -1,0 +1,22 @@
+---
+- hosts: all
+  remote_user: config
+  become: true
+  become_user: root
+  gather_facts: no
+  roles:
+    - wait-for-ssh
+- hosts: label_apache_latest
+  remote_user: config
+  become: true
+  become_user: root
+  gather_facts: no
+  roles:
+    - httpd-install
+- hosts: label_jboss_latest
+  remote_user: config
+  become: true
+  become_user: root
+  gather_facts: yes
+  roles:
+    - jboss-install       
