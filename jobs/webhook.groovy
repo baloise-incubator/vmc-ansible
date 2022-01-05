@@ -51,7 +51,7 @@ spec:
                     container(name: 'ansible') {
                         withVault([vaultSecrets: [[path: '/secret/automation/ssh-key', secretValues: [[envVar: 'ANSIBLE_SSH_KEY', vaultKey: 'ssh-key']]]]]) {
                             sh (script: '#!/bin/sh -e\necho "$ANSIBLE_SSH_KEY" > id_rsa && chmod 600 id_rsa',returnStdout: true)
-                            sh "ansible-playbook -i kubevirt.yaml ansible/generic-webhook.yaml --extra-vars \"ansible_ssh_private_key_file=id_rsa\" -l namespace_${cluster} -l label_cluster_${cluster}"
+                            sh "ansible-playbook -i ansible/kubevirt.yaml ansible/generic-webhook.yaml --extra-vars \"ansible_ssh_private_key_file=id_rsa\" -l namespace_${cluster} -l label_cluster_${cluster}"
                             sh 'rm id_rsa'
                         }
                     }
