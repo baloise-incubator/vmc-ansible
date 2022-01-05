@@ -1,5 +1,5 @@
 ---
-- hosts: label_apache_latest
+- hosts: label_jboss_latest
   remote_user: config
   become: true
   become_user: root

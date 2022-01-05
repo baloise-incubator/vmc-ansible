@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: label_os_rhel
   remote_user: config
   become: true
   become_user: root
